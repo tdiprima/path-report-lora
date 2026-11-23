@@ -113,9 +113,17 @@ Only if Ollama is installed on the server (`ollama --version`). Follow the
 
 **`torch.cuda.is_available()` prints `False`.**
 Run `nvidia-smi`. If that fails too, the server has a driver problem and you
-need the admin. If `nvidia-smi` works, the GPU is probably too new for the
-pinned PyTorch. Open `pyproject.toml`, raise only the `torch==` line to a
-newer version, and run `uv sync` again.
+need the admin. If `nvidia-smi` works, check which PyTorch got installed:
+
+```bash
+uv run python -c "import torch; print(torch.__version__)"
+```
+
+On an ARM server (`uname -m` prints `aarch64`) it must end in `+cu126`. If it
+does not, your copy of the code is old: run `git pull`, then `uv sync` again.
+On an Intel/AMD server, the GPU is probably too new for the pinned PyTorch.
+Open `pyproject.toml`, raise only the first `torch==` line to a newer version,
+and run `uv sync` again.
 
 **`uv sync` cannot download Python or packages.**
 The server may block outside internet. Ask the admin about a proxy.
