@@ -1,7 +1,7 @@
 [project]
 name = "path-report-lora"
 version = "0.1.0"
-description = "Add your description here"
+description = "LoRA fine-tuning demo that teaches Qwen2.5 to extract JSON from pathology reports, with before/after eval and Ollama export."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

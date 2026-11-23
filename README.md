@@ -44,18 +44,17 @@ delete it. The base model is untouched.
 
 ## Run it
 
-Needs Python 3.10 to 3.12. A GPU makes it fast. It is used automatically.
+Needs [uv](https://docs.astral.sh/uv/). It installs the right Python and the
+packages for you. A GPU makes it fast. It is used automatically.
 `train.py` prints `training on: <GPU name>`. If it prints `CPU (no GPU found)`,
 PyTorch cannot see the GPU: check `nvidia-smi` and the torch version.
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+uv sync                  # installs everything into .venv/
 
-python make_data.py   # optional, the data is already in data/
-python train.py       # makes adapter/
-python evaluate.py    # prints before/after
+uv run make_data.py      # optional, the data is already in data/
+uv run train.py          # makes adapter/
+uv run evaluate.py       # prints before/after
 ```
 
 `evaluate.py` is the part to show your boss. It prints how many of the 30
@@ -64,19 +63,16 @@ test reports the base model gets right, then how many base + adapter gets right.
 ## Put it in Ollama
 
 Ollama cannot read this model's raw files. It needs one `.gguf` file.
-llama.cpp has the converter. Its Python packages clash with ours, so it
-gets its own environment.
+llama.cpp has the converter. Its Python packages clash with ours, so uv
+runs it in a separate throwaway environment.
 
 ```bash
-python merge.py       # makes merged/
-deactivate
+uv run merge.py          # makes merged/
 
 git clone --depth 1 https://github.com/ggml-org/llama.cpp
-python3 -m venv .venv-convert
-source .venv-convert/bin/activate
-pip install -r llama.cpp/requirements/requirements-convert_hf_to_gguf.txt
-python llama.cpp/convert_hf_to_gguf.py merged --outfile path-report-lora.gguf --outtype f16
-deactivate
+uv run --no-project --python 3.12 \
+  --with-requirements llama.cpp/requirements/requirements-convert_hf_to_gguf.txt \
+  llama.cpp/convert_hf_to_gguf.py merged --outfile path-report-lora.gguf --outtype f16
 
 ollama create path-report-lora -f Modelfile
 ollama run path-report-lora "Colon, hemicolectomy: Adenocarcinoma, G2, measuring 31 mm. Margins are free of tumor."
@@ -95,3 +91,5 @@ ollama run path-report-lora "Colon, hemicolectomy: Adenocarcinoma, G2, measuring
   `Qwen/Qwen2.5-1.5B-Instruct`.
 - Train longer: edit `num_train_epochs` in `train.py`.
 - Adapter not clearly better? Fix the data first. That is the usual cause.
+
+<br>

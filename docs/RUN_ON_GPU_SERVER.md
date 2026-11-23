@@ -40,26 +40,33 @@ cd path-report-lora
 
 ## 4. Set up Python
 
-Check the version. It must be 3.10, 3.11 or 3.12.
+This project uses `uv`. Check that the server has it:
 
 ```bash
-python3 --version
+uv --version
+```
+
+If that says "command not found", install it (no admin rights needed), then
+log out and back in:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 Then:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+uv sync
 ```
 
-The install downloads about 2.5 GB. It takes a few minutes.
+This downloads the right Python and all packages into `.venv/`. About 2.5 GB.
+It takes a few minutes. You do not need to activate anything: `uv run` uses
+that folder by itself.
 
 ## 5. Check that PyTorch sees the GPU
 
 ```bash
-python -c "import torch; print(torch.cuda.is_available())"
+uv run python -c "import torch; print(torch.cuda.is_available())"
 ```
 
 It must print `True`. If it prints `False`, stop and see "If something goes
@@ -68,7 +75,7 @@ wrong" below. Training on `False` still works, but slowly, on the CPU.
 ## 6. Train
 
 ```bash
-python train.py
+uv run train.py
 ```
 
 Near the top it prints `training on: <GPU name>`. Then a progress bar, with
@@ -78,13 +85,13 @@ it prints `adapter saved to adapter/`. Expect a minute or two.
 To use a specific GPU, for example number 1:
 
 ```bash
-CUDA_VISIBLE_DEVICES=1 python train.py
+CUDA_VISIBLE_DEVICES=1 uv run train.py
 ```
 
 ## 7. Get the before/after scores
 
 ```bash
-python evaluate.py | tee results.txt
+uv run evaluate.py | tee results.txt
 ```
 
 This prints the scores for the base model, then for base + adapter, then one
@@ -107,13 +114,11 @@ Only if Ollama is installed on the server (`ollama --version`). Follow the
 **`torch.cuda.is_available()` prints `False`.**
 Run `nvidia-smi`. If that fails too, the server has a driver problem and you
 need the admin. If `nvidia-smi` works, the GPU is probably too new for the
-pinned PyTorch. Open `requirements.txt`, raise only the `torch==` line to a
-newer version, and run `pip install -r requirements.txt` again.
+pinned PyTorch. Open `pyproject.toml`, raise only the `torch==` line to a
+newer version, and run `uv sync` again.
 
-**`python3 --version` shows 3.13 or newer, or 3.9 or older.**
-Try `python3.12 --version` or `python3.11 --version`. If one exists, use it
-in place of `python3` in step 4. Some servers need `module avail python` and
-`module load ...` first.
+**`uv sync` cannot download Python or packages.**
+The server may block outside internet. Ask the admin about a proxy.
 
 **`CUDA out of memory`.**
 Another job is using the GPU. Pick a free one with `CUDA_VISIBLE_DEVICES`
