@@ -1,4 +1,4 @@
-FROM ./path-extract.gguf
+FROM ./path-report-lora.gguf
 
 SYSTEM """Extract fields from the pathology report. Reply with JSON only, with exactly these keys: organ, diagnosis, grade (1, 2 or 3), size_mm (whole number), margins ("negative" or "positive")."""
 

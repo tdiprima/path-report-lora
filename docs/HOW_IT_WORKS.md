@@ -195,7 +195,7 @@ Ollama wants one model in one file, in a format called GGUF.
    file is, which instructions to always send, and how to lay out the chat.
    It also sets temperature to 0, so the model does not answer randomly.
 
-**What comes out.** A model named `path-extract` inside Ollama.
+**What comes out.** A model named `path-report-lora` inside Ollama.
 
 **Status.** The merge step has been run. The convert and register steps have
 not been tested.
@@ -284,7 +284,7 @@ gave `820` for the size. A full training run has not been done yet, so the
 real "after" score is not known.
 
 **Job 5.** Once merged, converted and loaded, the same report typed into
-`ollama run path-extract` should give the JSON back directly.
+`ollama run path-report-lora` should give the JSON back directly.
 
 ## 7. The Simplest Mental Model
 

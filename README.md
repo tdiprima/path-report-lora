@@ -45,6 +45,8 @@ delete it. The base model is untouched.
 ## Run it
 
 Needs Python 3.10 to 3.12. A GPU makes it fast. It is used automatically.
+`train.py` prints `training on: <GPU name>`. If it prints `CPU (no GPU found)`,
+PyTorch cannot see the GPU: check `nvidia-smi` and the torch version.
 
 ```bash
 python3 -m venv .venv
@@ -73,11 +75,11 @@ git clone --depth 1 https://github.com/ggml-org/llama.cpp
 python3 -m venv .venv-convert
 source .venv-convert/bin/activate
 pip install -r llama.cpp/requirements/requirements-convert_hf_to_gguf.txt
-python llama.cpp/convert_hf_to_gguf.py merged --outfile path-extract.gguf --outtype f16
+python llama.cpp/convert_hf_to_gguf.py merged --outfile path-report-lora.gguf --outtype f16
 deactivate
 
-ollama create path-extract -f Modelfile
-ollama run path-extract "Colon, hemicolectomy: Adenocarcinoma, G2, measuring 31 mm. Margins are free of tumor."
+ollama create path-report-lora -f Modelfile
+ollama run path-report-lora "Colon, hemicolectomy: Adenocarcinoma, G2, measuring 31 mm. Margins are free of tumor."
 ```
 
 ## What was tested

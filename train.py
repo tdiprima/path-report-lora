@@ -27,6 +27,7 @@ model = get_peft_model(
     ),
 )
 model.print_trainable_parameters()
+print("training on:", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU (no GPU found)")
 
 
 def to_features(example):

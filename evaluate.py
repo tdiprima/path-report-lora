@@ -10,6 +10,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from common import ADAPTER_DIR, BASE_MODEL, FIELDS, chat
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
+print("running on:", device)
 tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
 
 with open("data/test.jsonl") as f:
