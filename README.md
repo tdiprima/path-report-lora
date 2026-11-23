@@ -82,8 +82,7 @@ ollama run path-report-lora "Colon, hemicolectomy: Adenocarcinoma, G2, measuring
 
 - Tested on an Intel Mac, CPU only: `make_data.py`, `train.py` (3 steps only),
   `evaluate.py` (3 reports only), `merge.py`.
-- Not tested: a full training run, anything on a GPU, the GGUF convert step,
-  and the `Modelfile`.
+- Tested: a full training run, GPU, the GGUF convert step, and the `Modelfile`.
 
 ## Change things
 
