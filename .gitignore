@@ -1,0 +1,9 @@
+.venv*/
+__pycache__/
+checkpoints/
+adapter/
+merged/
+.env
+Icon*
+*.gguf
+llama.cpp/
